@@ -1,0 +1,5 @@
+2026-09-12 portal FAILED timeout
+2026-09-12 api OK -
+2026-09-13 billing FAILED bad_config
+2026-09-13 portal OK -
+2026-09-14 auth FAILED oom
