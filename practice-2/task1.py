@@ -19,3 +19,10 @@ def failed_deployments(path:str):
 if __name__ =="__main__":
     for service,reason in failed_deployments("test.log"):
         print(service,reason)
+
+
+
+#check the lazy 
+gen = failed_deployments("test.log")
+print(type(gen))
+print(next(gen))
