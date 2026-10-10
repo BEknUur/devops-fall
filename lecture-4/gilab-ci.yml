@@ -1,0 +1,12 @@
+stages:
+  - build 
+
+job1:
+  stage: build 
+  script: echo "hello,world"
+
+
+job2:
+  stage: build 
+scropt: echo "bye bye"
+
