@@ -8,5 +8,5 @@ job1:
 
 job2:
   stage: build 
-scropt: echo "bye bye"
+  script: echo "bye bye"
 

@@ -1,0 +1,17 @@
+services:
+  vault:
+    image: hashicorp/vault:latest
+    container_name: vault-dev
+
+    ports:
+      - "127.0.0.1:8305:8200"
+
+    cap_add:
+      - IPC_LOCK
+
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: "dev-only-token"
+      VAULT_DEV_LISTEN_ADDRESS: "0.0.0.0:8200"
+      VAULT_ADDR: "http://127.0.0.1:8200"
+
+    command: ["server", "-dev"]

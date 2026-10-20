@@ -1,0 +1,24 @@
+services:
+  api:
+    build: .
+    ports:
+      - "127.0.0.1:${API_PORT:-8000}:8000"
+    environment:
+      PGHOST: postgres
+      PGPORT: "5432"
+      PGDATABASE: app
+      PGUSER: app
+      PGPASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    # Нет depends_on: API запускается независимо от PostgreSQL.
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: app
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

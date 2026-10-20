@@ -1,0 +1,37 @@
+stages:
+  - build
+
+build_and_push:
+  stage: build
+  image: docker:29.1.3-cli
+  tags:
+    - devops-docker
+  services:
+    - name: docker:29.1.3-dind
+      alias: docker
+      variables:
+        HEALTHCHECK_TCP_PORT: "2376"
+  variables:
+    DOCKER_HOST: "tcp://docker:2376"
+    DOCKER_TLS_CERTDIR: "/certs"
+    DOCKER_TLS_VERIFY: "1"
+    DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main" && $CI_COMMIT_REF_PROTECTED == "true"'
+  script:
+    - |
+      set -eu
+      set +x
+      : "${DOCKERHUB_USERNAME:?Add DOCKERHUB_USERNAME in GitLab CI/CD variables}"
+      : "${DOCKERHUB_TOKEN:?Add DOCKERHUB_TOKEN in GitLab CI/CD variables}"
+      : "${STUDENT_ID:?Add STUDENT_ID in GitLab CI/CD variables}"
+
+      export DOCKER_CONFIG="$(mktemp -d)"
+      trap 'rm -rf "$DOCKER_CONFIG"' EXIT
+      printf '%s' "$DOCKERHUB_TOKEN" | docker login docker.io --username "$DOCKERHUB_USERNAME" --password-stdin
+
+      image="docker.io/$DOCKERHUB_USERNAME/fastapi-app:$CI_COMMIT_SHA"
+      assignment_image="docker.io/$DOCKERHUB_USERNAME/app-$STUDENT_ID-devops2026:$CI_COMMIT_SHA"
+      docker build --pull --label "org.opencontainers.image.revision=$CI_COMMIT_SHA" -t "$image" -t "$assignment_image" .
+      docker push "$image"
+      docker push "$assignment_image"

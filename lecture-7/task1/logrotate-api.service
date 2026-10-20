@@ -1,0 +1,9 @@
+[Unit]
+Description=Rotate simple-api logs
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/simple-api-rotate
+# Date and duration of each actual rotation.
+StandardOutput=append:/home/log_rotates.log
+StandardError=inherit

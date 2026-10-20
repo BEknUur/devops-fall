@@ -1,0 +1,10 @@
+[Unit]
+Description=Check simple-api logs every 5 seconds
+
+[Timer]
+OnActiveSec=5s
+OnUnitInactiveSec=5s
+AccuracySec=1s
+
+[Install]
+WantedBy=timers.target

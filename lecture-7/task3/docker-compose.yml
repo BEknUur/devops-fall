@@ -1,0 +1,18 @@
+services:
+  vault:
+    image: hashicorp/vault:latest
+    container_name: vault-prod
+
+    ports:
+      - "127.0.0.1:8306:8200"
+
+    environment:
+      VAULT_ADDR: "http://127.0.0.1:8200"
+      SKIP_SETCAP: "true"
+
+    volumes:
+      - ./t/vault/config:/vault/config:ro
+      - ./t/vault/file:/vault/file
+      - ./t/vault/logs:/vault/logs
+
+    command: ["server"]
